@@ -1,9 +1,8 @@
-import sys
+import pytest
 
-x = 2
-print "hello"
+def func(num):
+    return num + 1
+    
+def test_answer():
+    assert func(3) == 5
 
-if x == 2
-    print "hi"
-else:
-    print "hey"
