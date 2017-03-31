@@ -1,5 +1,5 @@
 """
-	work pls
+	work plss
 """
 def func(num):
     return num + 1
