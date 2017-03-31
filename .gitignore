@@ -1,3 +1,6 @@
 __pycache__
 .gitignore
 .cache
+results.csv
+jmeter.log
+log.jtl
