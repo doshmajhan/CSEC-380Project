@@ -4,3 +4,4 @@ __pycache__
 results.csv
 jmeter.log
 log.jtl
+creds.txt
