@@ -6,39 +6,55 @@
 
 import requests
 AUTH_API = 'http://54.208.87.70/'
+AUTH_USERS = ['cam', 'hayden', 'dosh']
+AUTH_PASSWORDS = ['password1', 'password2', 'password3']
+BAD_USERS = ['ted', 'bob']
+BAD_PASSWORDS = ['changeme1', 'changeme2']
 
-def register_users():
-    global AUTH_API
-    users = ['cam', 'hayden', 'dosh']
-    passwords = ['password1', 'password2', 'password3']
-    for user, password in zip(users, passwords):
-        r = requests.post("{}register".format(AUTH_API), data=data)
-        if r.status_code == '200':
-            print True
-        else:
-            print False
+class TestAuth:
+    """
+        Collection of functions to test our J2EE authentication
+    """
+    def test_register():
+        """
+            Tries to register a user against our authentication service
 
-def delete_users():
-    global AUTH_API
-    users = ['cam', 'hayden', 'dosh']
-    passwords = ['password1', 'password2', 'password3']
-    for user, password in zip(users, passwords):
-        r = requests.post("{}delete".format(AUTH_API), data=data)
-        if r.status_code == '200':
-            print True
-        else:
-            print False
+            Expects a 200 response for each request
+        """
+        for user, password in zip(AUTH_USERS, AUTH_PASSWORDS):
+            r = requests.post("{}register".format(AUTH_API), data=data)
+            assert r.status_code == '200'
 
-def is_authenticated():
-    global AUTH_API
-    users = ['cam', 'hayden', 'dosh']
-    passwords = ['password1', 'password2', 'password3']
-    for user, password in zip(users, passwords):
-        r = requests.post("{}isAuthenticated".format(AUTH_API), data=data)
-        if r.status_code == '200':
-            print True
-        else:
-            print False
+
+    def test_delete():
+        """
+            Tries to delete a user that exists in our authentication service
+
+            Expects a 200 for existing and 404 for non-existing users
+        """
+        for user, password in zip(AUTH_USERS, AUTH_PASSWORDS):
+            r = requests.post("{}delete".format(AUTH_API), data=data)
+            assert r.status_code == '200'
+
+        for user, password in zip(BAD_USERS, BAD_PASSWORDS):
+            r = requests.post("{}delete".format(AUTH_API), data=data)
+            assert r.status_code == '404'
+
+
+    def is_authenticated():
+        """
+            Checks if a given user is authenticated
+
+            Expects a 200 if its authenticated, 403 if not
+        """
+        for user, password in zip(AUTH_USERS, AUTH_PASSWORDS):
+            r = requests.post("{}isAuthenticated".format(AUTH_API), data=data)
+            assert r.status_code == '200'
+
+        for user, password in zip(BAD_USERS, BAD_PASSWORDS):
+            r = requests.post("{}isAuthenticated".format(AUTH_API), data=data)
+            assert r.status_code == '403'
+
 
 def func(num):
     return num + 1
