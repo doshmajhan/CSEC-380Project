@@ -1,9 +1,10 @@
 {
-    "name": "nodeapi",
-    "description": "API for adding/removing skits",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "express": "3.x"
-    }
+  "name": "nodeapi",
+  "description": "API for adding/removing skits",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "3.x"
+  }
 }
