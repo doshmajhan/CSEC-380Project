@@ -5,11 +5,13 @@
 """
 
 import requests
+
 AUTH_API = 'http://54.208.87.70/'
 AUTH_USERS = ['cam', 'hayden', 'dosh']
 AUTH_PASSWORDS = ['password1', 'password2', 'password3']
 BAD_USERS = ['ted', 'bob']
 BAD_PASSWORDS = ['changeme1', 'changeme2']
+
 
 class TestAuth:
     """
