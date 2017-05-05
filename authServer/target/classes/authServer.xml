@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:ldap="http://www.springframework.org/schema/ldap"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+   
+   <!-- <util:map id="dbProps" xmlns:util="http://www.springframework.org/schema/util">
+    <entry key="db.driver" value="com.mysql.jdbc.Driver"/>
+    <entry key="db.jdbcurl" value="jdbc:mysql://localhost/auth"/>
+    <entry key="db.username" value="root"/>
+    <entry key="db.password" value="con162ess"/>
+	</util:map>
+ -->
+	<bean id="dataSource"
+	       class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	    <property name="url" value="jdbc:mysql://localhost/"/>
+	    <property name="username" value="root"/>
+	    <property name="password" value="con162ess"/>
+	</bean>
+	
+</beans>
