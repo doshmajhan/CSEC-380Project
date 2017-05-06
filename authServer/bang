@@ -1,0 +1,1 @@
+scp -i "/home/sonoframbo/curr/WAS/project/chaim.pem" $1 ubuntu@54.208.87.70:~
