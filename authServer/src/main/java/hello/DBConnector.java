@@ -1,5 +1,6 @@
 package hello;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.util.Hashtable;
 import javax.naming.*;
@@ -89,7 +90,6 @@ public class DBConnector {
 		    	return "Invalid Session Token" + "|sessId = "+sessId;
 		    }
 		}
-		
 	}
 	
 	
@@ -226,8 +226,6 @@ public class DBConnector {
 			else {
 				return res;
 			}
-			
-
 	}
 	
 	
@@ -263,13 +261,12 @@ public class DBConnector {
 			    ps.setString(2, person[2]);
 			    ResultSet rs = ps.executeQuery();
 			    if (!rs.isBeforeFirst() ) {   */ 
-			    	PreparedStatement ps1 = c.prepareStatement("insert into settings (id ,username,displayname,email,image) values(?,?,?,?,?)");
+			    	PreparedStatement ps1 = c.prepareStatement("insert into settings (username,displayname,email,image) values(?,?,?,?)");
 			    	//for (int x=0;x<person.length;x++){
 			    		ps1.setString(1,person[0]);
 			    		ps1.setString(2,person[1]);
 			    		ps1.setString(3,person[2]);
 			    		ps1.setString(4,person[3]);
-			    		ps1.setString(5,person[4]);
 			    		
 			    	//}
 			    	int update = ps1.executeUpdate();
@@ -303,7 +300,7 @@ public class DBConnector {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			   return res;
+			   return "User SignedUp";
 			}
 	
 	}
