@@ -3,79 +3,25 @@
     if(!empty($_POST)) 
     { 
         // Ensure that the user fills out fields 
-        if(empty($_POST['username'])) 
-        { die("Please enter a username."); } 
-        if(empty($_POST['password'])) 
-        { die("Please enter a password."); } 
-        if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) 
-        { die("Invalid E-Mail Address"); } 
-         
-        // Check if the username is already taken
-        $query = " 
-            SELECT 
-                1 
-            FROM users 
-            WHERE 
-                username = :username 
-        "; 
-        $query_params = array( ':username' => $_POST['username'] ); 
-        try { 
-            $stmt = $db->prepare($query); 
-            $result = $stmt->execute($query_params); 
+        if(empty($_POST['username'])) { 
+            die("Please enter a username."); 
         } 
-        catch(PDOException $ex){ die("Failed to run query: " . $ex->getMessage()); } 
-        $row = $stmt->fetch(); 
-        if($row){ die("This username is already in use"); } 
-        $query = " 
-            SELECT 
-                1 
-            FROM users 
-            WHERE 
-                email = :email 
-        "; 
-        $query_params = array( 
-            ':email' => $_POST['email'] 
-        ); 
-        try { 
-            $stmt = $db->prepare($query); 
-            $result = $stmt->execute($query_params); 
+        if(empty($_POST['email'])) { 
+            die("Please enter a email."); 
         } 
-        catch(PDOException $ex){ die("Failed to run query: " . $ex->getMessage());} 
-        $row = $stmt->fetch(); 
-        if($row){ die("This email address is already registered"); } 
-         
-        // Add row to database 
-        $query = " 
-            INSERT INTO users ( 
-                username, 
-                password, 
-                salt, 
-                email 
-            ) VALUES ( 
-                :username, 
-                :password, 
-                :salt, 
-                :email 
-            ) 
-        "; 
-         
-        // Security measures
-        $salt = dechex(mt_rand(0, 2147483647)) . dechex(mt_rand(0, 2147483647)); 
-        $password = hash('sha256', $_POST['password'] . $salt); 
-        for($round = 0; $round < 65536; $round++){ $password = hash('sha256', $password . $salt); } 
-        $query_params = array( 
-            ':username' => $_POST['username'], 
-            ':password' => $password, 
-            ':salt' => $salt, 
-            ':email' => $_POST['email'] 
-        ); 
-        try {  
-            $stmt = $db->prepare($query); 
-            $result = $stmt->execute($query_params); 
-        } 
-        catch(PDOException $ex){ die("Failed to run query: " . $ex->getMessage()); } 
-        header("Location: index.php"); 
-        die("Redirecting to index.php"); 
+
+        $ch = curl_init();
+        $fields = "user=" . $_POST['username'] . "&display=" . $_POST['display'] . "&email=" . $_POST['email'] . "&pic=" . $_POST['pic'];
+
+        echo $fields;
+        curl_setopt($ch, CURLOPT_URL, "http://54.208.87.70:8181/signup");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_RETRUNTRANSFER, true);
+
+        $server_output = curl_exec($ch);
+        echo $server_output;
+        //header("Location: index.php"); 
     } 
 ?>
 
@@ -122,8 +68,10 @@
         <input type="text" name="username" value="" /> 
         <label>Email: <strong style="color:darkred;">*</strong></label> 
         <input type="text" name="email" value="" /> 
-        <label>Password:</label> 
-        <input type="password" name="password" value="" /> <br /><br />
+        <label>Display Name:</label> 
+        <input type="text" name="display" value="" />
+        <label>Profile Image:</label>
+        <input type="text" name="pic" value="" /> <br /><br />
         <input type="submit" class="btn btn-info" value="Register" /> 
     </form>
 </div>

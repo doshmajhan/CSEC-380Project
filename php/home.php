@@ -1,4 +1,62 @@
+<?php
+    require("config.php");
+    if(!isset($_COOKIE["skitter"])){
+        header('Location: index.php');
+    }
+    $ch = curl_init();
+    $fields = "sessId=" . $_COOKIE["skitter"];
+    //echo $fields;
+    curl_setopt($ch, CURLOPT_URL, "http://54.208.87.70:8181/isAuthenticated");
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+    $server_output = curl_exec($ch);
+
+    $query = "
+        SELECT
+            username   
+        FROM sessions
+        WHERE
+            token = :token
+    ";
+    $query_params = array(':token' => $_COOKIE['skitter']);
+    try {
+        $stmt = $db->prepare($query);
+        $result = $stmt->execute($query_params);
+    }
+    catch(PDOException $ex){
+        die("Failed to run query: " . $ex->getMessage());
+    }
+    $row = $stmt->fetch();
+    if(!$row){
+        die("No valid session");
+    }
+    $username = $row['username'];
+    $query = "
+        SELECT
+            * 
+        FROM settings
+        WHERE
+            username = :username
+    ";
+    $query_params = array(':username' => $username);
+    try {
+        $stmt = $db->prepare($query);
+        $result = $stmt->execute($query_params);
+    }
+    catch(PDOException $ex){
+        die("Failed to run query: " . $ex->getMessage());
+    }
+    $row = $stmt->fetch();
+    if(!$row){
+        die("No valid session");
+    }
+    //print_r($row);
+    $display = $row['displayname'];
+    $img = $row['image'];
+    $email = $row['email'];
+?>
 <!DOCTYPE html>
 <html>
 <title>Home</title>
@@ -8,6 +66,10 @@
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="dialog.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="dialog.js"></script>
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
 </style>
@@ -21,9 +83,9 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
   <div class="w3-dropdown-hover w3-hide-small">
     <button class="w3-button w3-padding-large" title="Account Settings"><i class="fa fa-user"></i></button>
     <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-        <a href="#" class="w3-bar-item w3-button">Change Display Name</a>
-        <a href="#" class="w3-bar-item w3-button">Change Email</a>
-        <a href="#" class="w3-bar-item w3-button">Change Profile Image</a>
+        <a id="changeDisplay" class="w3-bar-item w3-button">Change Display Name</a>
+        <a id="changeEmail" class="w3-bar-item w3-button">Change Email</a>
+        <a id="changeImage" class="w3-bar-item w3-button">Change Profile Image</a>
     </div>
   </div>
 </div>
@@ -45,8 +107,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
       <!-- Profile -->
       <div class="w3-card-2 w3-round w3-white">
         <div class="w3-container">
-         <h4 class="w3-center">My Profile</h4>
-         <p class="w3-center"><img src="/w3images/avatar3.png" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
+        <h4 class="w3-center"><?php echo $display; ?></h4>
+        <p class="w3-center"><img src=<?php echo '"' . $img . '"'; ?> class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
          <hr>
         </div>
       </div>
@@ -141,6 +203,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
 </footer>
 
 <script>
+
 // Accordion
 function myFunction(id) {
     var x = document.getElementById(id);

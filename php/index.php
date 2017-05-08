@@ -35,7 +35,7 @@
             <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
                 <form action="login.php" method="post"> 
                     Username:<br /> 
-                    <input type="text" name="username" value="<?php echo $submitted_username; ?>" /> 
+                    <input type="text" name="username" value="" /> 
                     <br /><br /> 
                     Password:<br /> 
                     <input type="password" name="password" value="" /> 
